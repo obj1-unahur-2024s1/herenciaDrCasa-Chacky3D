@@ -1,0 +1,43 @@
+import enfermedades.*
+import personas.*
+
+test "Tests etapa 1" {
+
+	const malaria = new EnfermedadInfecciosa(celulasAmenazadas = 500)
+	const otitis = new EnfermedadInfecciosa(celulasAmenazadas = 1000)
+	const lupus = new EnfermedadAutoinmune(celulasAmenazadas = 1000)
+	
+	const logan = new Persona(temperatura = 36, cantidadDeCelulas = 3000000)
+	logan.contraer(malaria)
+	logan.contraer(otitis)
+	const frank = new Persona(temperatura = 36, cantidadDeCelulas = 3500000)
+	frank.contraer(lupus)
+	
+	malaria.reproducirse()
+	assert.equals(1000, malaria.celulasAmenazadas())
+	assert.equals(logan, malaria.afectandoA())
+	assert.notThat(malaria.esAgresiva())
+	
+	assert.equals(logan, otitis.afectandoA())
+	assert.notThat(otitis.esAgresiva())
+	
+	logan.acontecerUnDia()
+	assert.equals(38, logan.temperatura())
+	assert.equals(0, logan.cantidadCelulasAmenazadas())
+	assert.equals(malaria, logan.enfermedadMasCelulasAmenazadas())
+	assert.notThat(logan.estaEnComa())
+	
+	assert.notThat(lupus.esAgresiva())
+	assert.equals(0, lupus.cantidadDeDiasActiva())
+	
+	frank.acontecerUnDia()
+	assert.equals(1, lupus.cantidadDeDiasActiva())
+	assert.equals(36, frank.temperatura())
+	assert.equals(0, frank.cantidadCelulasAmenazadas())
+	assert.equals(lupus, frank.enfermedadMasCelulasAmenazadas())
+	assert.equals(3499000, frank.cantidadDeCelulas())
+	assert.notThat(frank.estaEnComa())
+	
+	
+
+}
